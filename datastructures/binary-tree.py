@@ -15,7 +15,7 @@ class Node(object):
         self.parent = None
 
     def __str__(self):
-     return '{0}'.format(self.key)
+        return '{0}'.format(self.key)
 
     def __repr__(self):
         return 'Key: {0:<5}\tParent: {1:<5}\tLeft: {2:<5}\tRight: {3:<5}'.format(self.key,
