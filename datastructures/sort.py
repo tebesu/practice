@@ -90,9 +90,11 @@ def median_quicksort(A, low, high):
 def quicksort(A, low, high):
     '''
     Quicksort
+    Runtime:   O(n lg n) (expected)
+    Stable:    Yes
+    In-Place:  No (but can be implemented)
     '''
     if low < high:
-        x = A[high]
         pivot = partition(A, low, high)
         quicksort(A, low, pivot-1)
         quicksort(A, pivot+1, high)
@@ -114,7 +116,10 @@ def quickselect(A, p, r, i):
 
 def insertion_sort(A):
     '''
-    simple insertion sort
+    Insertion Sort
+    Runtime:   O(n^2)
+    Stable:    Yes
+    In-Place:  Yes
     '''
     for i in xrange(1, len(A)):
         j = i
@@ -155,7 +160,74 @@ def create_random_array(size, min_random, max_random, rand_seed=0):
         randomized array of elements
     '''
     seed(rand_seed)
-    return [randint(min_random, max_random) for x in range(size)]
+    return [randint(min_random, max_random) for x in xrange(size)]
 
+def merge(a, b):
+    '''
+    Takes two arrays and sort merges them together
+    '''
+    c = []
+    while len(a) > 0 and len(b) > 0:
+        if a[0] > b[0]:
+            c.append(b.pop(0)) # Should use a queue if poping front
+        else:
+            c.append(a.pop(0))
+
+    if len(a) > 0:
+        c = c + a
+
+    if len(b) > 0:
+        c = c + b
+
+    return c
+
+def mergesort(A):
+    '''
+    Mergesort: splits an array sorts then merges them together
+    Runtime:   O(n lg n)
+    Stable:    Yes
+    In-Place:  No
+    '''
+    if len(A) == 1:
+        return A
+    left = mergesort(A[:len(A)/2])
+    right = mergesort(A[len(A)/2:])
+
+    return merge(left, right)
+
+
+from pythonutils.parallel import Timer
+timer = Timer()
+minimum = -int(1e5)
+maximum = int(1e5)
+elements = int(1e5)
+print
+
+
+for i in range(10):
+    A = create_random_array(elements, minimum, maximum)
+    timer.start()
+    #median_quicksort(A, 0, len(A)-1)
+    #random_quicksort(A, 0, len(A)-1)
+    #quicksort(A, 0, len(A)-1)
+    #insertion_sort(A)
+    A = mergesort(A)
+    timer.stop()
+    if not is_sorted(A):
+        print 'ERROR: Not sorted'
+        break
+timer.print_cumulative()
+
+
+
+
+'''
+%%timeit A = create_random_array(elements, minimum, maximum)
+insertion_sort(A)
+
+%%timeit A = create_random_array(elements, minimum, maximum)
+quicksort(A, 0, len(A)-1)
+
+'''
 if __name__ == '__main__':
     pass
