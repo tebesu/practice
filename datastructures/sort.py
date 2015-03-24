@@ -7,7 +7,6 @@
 '''
 # pylint: disable=C0103, W0621
 from random import randint, seed
-from collections import deque
 
 def swap(ls, i, j):
     '''
@@ -105,17 +104,22 @@ def merge(a, b):
     Expects: deques
     '''
     c = []
-    while len(a) > 0 and len(b) > 0:
-        if a[0] > b[0]:
-            c.append(b.popleft())
+    i, j = 0, 0
+    while j < len(a) and i < len(b):
+        if a[j] > b[i]:
+            c.append(b[i])
+            i += 1
         else:
-            c.append(a.popleft())
+            c.append(a[j])
+            j += 1
 
-    while len(a) > 0:
-        c.append(a.popleft())
+    while j < len(a):
+        c.append(a[j])
+        j += 1
 
-    while len(b) > 0:
-        c.append(b.popleft())
+    while i < len(b):
+        c.append(b[i])
+        i += 1
     return c
 
 def mergesort(A):
@@ -124,15 +128,14 @@ def mergesort(A):
     Runtime:   O(n lg n)
     Stable:    Yes
     In-Place:  No
-
-    Even with casts, deques perform 2x faster
     '''
     if len(A) == 1:
         return A
-    left = mergesort(A[:len(A)/2])
-    right = mergesort(A[len(A)/2:])
-
-    return merge(deque(left), deque(right))
+    mid = len(A) / 2
+    left = mergesort(A[:mid])
+    right = mergesort(A[mid:])
+    return merge(left, right)
+#    return merge(deque(left), deque(right))
 
 def quickselect(A, p, r, i):
     '''
@@ -207,19 +210,19 @@ elements = int(1e5)
 print
 
 
-# for i in range(10):
-#     A = create_random_array(elements, minimum, maximum)
-#     timer.start()
-#     #median_quicksort(A, 0, len(A)-1)
-#     #random_quicksort(A, 0, len(A)-1)
-#     #quicksort(A, 0, len(A)-1)
-#     #insertion_sort(A)
-#     A = mergesort(A)
-#     timer.stop()
-#     if not is_sorted(A):
-#         print 'ERROR: Not sorted'
-#         break
-# timer.print_cumulative()
+for i in range(10):
+    A = create_random_array(elements, minimum, maximum)
+    timer.start()
+    #median_quicksort(A, 0, len(A)-1)
+    #random_quicksort(A, 0, len(A)-1)
+    #quicksort(A, 0, len(A)-1)
+    #insertion_sort(A)
+    A = mergesort(A)
+    timer.stop()
+    if not is_sorted(A):
+        print 'ERROR: Not sorted'
+        break
+timer.print_cumulative()
 
 
 
