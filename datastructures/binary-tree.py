@@ -38,8 +38,22 @@ def _search(node, key):
         else:
             prev = temp
             temp = temp.right
+    if key == prev.key:
+        return prev
+    else:
+        return None
 
-    return prev
+def _print_helper(root, indent):
+    '''
+    @source: http://www.cs.toronto.edu/~rdanek/csc148h_09/lectures/8/bst.py
+    Print the tree rooted at BTNode root. Print str indent (which
+    consists only of whitespace) before the root value; indent more for the
+    subtrees so that it looks nice.'''
+    if root is not None:
+        print_helper(root.right, indent + "   ")
+        print indent + str(root.key)
+        print_helper(root.left, indent + "   ")
+
 
 
 class BinaryTree(object):
@@ -48,7 +62,7 @@ class BinaryTree(object):
         self.size = 0
 
     def __len__(self):
-        return self.length
+        return self.size
 
     @property
     def length(self):
@@ -189,14 +203,20 @@ class BinaryTree(object):
 
 
     def print_tree(self):
-        self.__inorder_tree_walk(self.root)
+        '''
+        source = http://www.cs.toronto.edu/~rdanek/csc148h_09/lectures/8/bst.py
+        Print the tree rooted at root.'''
+        _print_helper(self.root, "")
+
+
+
 
 if __name__ == '__main__':
+    print
     bt = BinaryTree()
     bt.insert(10)
     bt.insert(5)
     bt.insert(3)
     bt.insert(20)
     bt.delete(5)
-    print
-    print bt
+    bt.print_tree()
